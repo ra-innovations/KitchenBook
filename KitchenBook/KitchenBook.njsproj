@@ -53,6 +53,7 @@
     <Compile Include="public\lib\jquery\dist\jquery.min.js" />
     <Compile Include="routes\index.js" />
     <Content Include="appsettings.json" />
+    <Content Include="Docs\Project KitchenBook.xlsx" />
     <Content Include="package.json" />
     <Content Include="fonts\classy.eot" />
     <Content Include="fonts\classy.svg" />
@@ -188,6 +189,7 @@
     <Content Include="views\error.ejs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Docs\" />
     <Folder Include="public\" />
     <Folder Include="fonts\" />
     <Folder Include="public\images\" />
