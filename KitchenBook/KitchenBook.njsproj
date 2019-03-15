@@ -213,8 +213,11 @@
     <Folder Include="routes\" />
     <Folder Include="public\scss\" />
     <Folder Include="views\" />
+    <Folder Include="views\partials\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="views\partials\footer.ejs" />
+    <Content Include="views\partials\header.ejs" />
     <Content Include="views\recipe-post.ejs">
       <SubType>Code</SubType>
     </Content>
