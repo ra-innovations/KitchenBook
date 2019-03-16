@@ -110,7 +110,7 @@ router.get('/recipe-post', (req, res) =>
         var TYPES = require('tedious').TYPES;
         var sqlStatement = 'sp_getRecipe';
 
-        var request = new Request(sqlStatement, function (err, rowCount, recipe)
+        var request = new Request(sqlStatement, function (err, rowCount, oneRecipe)
         {
             if (err)
             {
@@ -122,7 +122,7 @@ router.get('/recipe-post', (req, res) =>
                 // Am having msSQL create the JSON in the stored proc. and then gathering in
                 // and parsing it into usable JSON
                 // {name that the webpage will use to access the object : value from the Request call
-                res.render("recipe-post", { recipe : JSON.parse(recipe[0][0].value)[0]});
+                res.render("recipe-post", { aRecipe: JSON.parse(oneRecipe[0][0].value) });
             }
             connection.close();
         });
