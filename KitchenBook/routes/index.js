@@ -46,7 +46,8 @@ router.get('/recipe-post', (req, res) =>
 
     // define configurations for tedious
     var config = {
-        server: "127.0.0.1",
+        //: "127.0.0.1",
+        server: "ra-innovations.database.windows.net",
         //If you're on Windows Azure, you will need this:
         options: {
             encrypt: true,
@@ -66,8 +67,10 @@ router.get('/recipe-post', (req, res) =>
         authentication: {
             type: "default",
             options: {
-                userName: "kb_dbo",
-                password: "password123"
+                //userName: "kb_dbo",
+                //password: "password123"
+                userName: "rajanth",
+                password: "RA1nnovat1ons"
             }
         },
         debug:
@@ -108,7 +111,7 @@ router.get('/recipe-post', (req, res) =>
     function executeStatement()
     {
         var TYPES = require('tedious').TYPES;
-        var sqlStatement = 'sp_getRecipe';
+        var sqlStatement = 'sp_getRecipeById';
 
         var request = new Request(sqlStatement, function (err, rowCount, oneRecipe)
         {
