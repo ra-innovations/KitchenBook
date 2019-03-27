@@ -5,8 +5,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>KitchenBook</Name>
     <RootNamespace>KitchenBook</RootNamespace>
-    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
-    <NameOfLastUsedPublishProfile>KitchenBook at Ionos</NameOfLastUsedPublishProfile>
+    <LastActiveSolutionConfig>Release|Any CPU</LastActiveSolutionConfig>
+    <NameOfLastUsedPublishProfile>KitchenBook at Local Folder</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -57,6 +57,8 @@
     <Content Include="appsettings.json" />
     <Content Include="Docs\Project KitchenBook.xlsx" />
     <None Include="KitchenBook at Ionos.pubxml" />
+    <None Include="KitchenBook at SmarterASP.pubxml" />
+    <None Include="KitchenBook at Local Folder.pubxml" />
     <Content Include="package.json" />
     <Content Include="fonts\classy.eot" />
     <Content Include="fonts\classy.svg" />
@@ -193,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="NewFolder1\" />
     <Folder Include="public\" />
     <Folder Include="fonts\" />
     <Folder Include="public\images\" />

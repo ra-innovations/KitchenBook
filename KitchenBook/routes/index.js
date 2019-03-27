@@ -1,43 +1,43 @@
 ﻿const express = require('express')
 const router = express.Router()
 
-router.get('/', (req, res) =>
+router.get('/', function (req, res)
 {
     console.log('Request for home recieved')
     res.render('index')
 })
 
-router.get('/index', (req, res) =>
+router.get('/index', function (req, res)
 {
     console.log('Request for home recieved')
     res.render('index')
 })
 
-router.get('/about', (req, res) =>
+router.get('/about', function (req, res)
 {
     console.log('Request for about page recieved')
     res.render('about')
 })
 
-router.get('/contact', (req, res) =>
+router.get('/contact', function (req, res)
 {
     console.log('Request for contact page recieved')
     res.render('contact')
 })
 
-router.get('/blog-post', (req, res) =>
+router.get('/blog-post', function (req, res)
 {
     console.log('Request for blog-post page recieved')
     res.render('blog-post')
 })
 
-router.get('/elements', (req, res) =>
+router.get('/elements', function (req, res)
 {
     console.log('Request for blog-post page recieved')
     res.render('elements')
 })
 
-router.get('/recipe-post', (req, res) =>
+router.get('/recipe-post', function (req, res)
 {
     // set up tedious variables
     var sqlNode = require('tedious');
