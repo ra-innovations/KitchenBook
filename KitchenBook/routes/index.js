@@ -47,13 +47,13 @@ router.get('/recipe-post', function (req, res)
     // define configurations for tedious
     var config = {
         //: "127.0.0.1",
-        server: "ra-innovations.database.windows.net",
+        server: process.env.DB_SERVER,
         //If you're on Windows Azure, you will need this:
         options: {
             encrypt: true,
-            database: "KitchenBook",
             rowCollectionOnDone: true,
-            rowCollectionOnRequestCompletion: true
+            rowCollectionOnRequestCompletion: true,
+            database: process.env.DB_DATABASENAME,
             // parseJSON: true //NOT using this because the results suck, placed json formatting in stored proc
             // port: "1433",
             // encrypt: true,
@@ -69,8 +69,8 @@ router.get('/recipe-post', function (req, res)
             options: {
                 //userName: "kb_dbo",
                 //password: "password123"
-                userName: "rajanth",
-                password: "RA1nnovat1ons"
+                userName: process.env.DB_USERNAME,
+                password: process.env.DB_PASSWORD
             }
         },
         debug:

@@ -1,5 +1,8 @@
-﻿'use strict';
-// SERVER SIDE CODE
+﻿// SERVER SIDE CODE
+
+// Environmental variable reader
+var dotenv = require('dotenv');
+dotenv.config();
 
 var debug = require('debug');
 var express = require('express');
@@ -20,6 +23,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 
 var app = express();
+
+//console.log("Here's the DB_USERNAME: " + process.env.DB_USERNAME);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -54,11 +54,15 @@
     <Compile Include="public\lib\jquery\dist\jquery.js" />
     <Compile Include="public\lib\jquery\dist\jquery.min.js" />
     <Compile Include="routes\index.js" />
+    <Content Include=".env">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="appsettings.json" />
     <Content Include="Docs\Project KitchenBook.xlsx" />
     <None Include="KitchenBook at Ionos.pubxml" />
     <None Include="KitchenBook at SmarterASP.pubxml" />
     <None Include="KitchenBook at Local Folder.pubxml" />
+    <Content Include="Docs\RA uid pwd.xlsx" />
     <Content Include="package.json" />
     <Content Include="fonts\classy.eot" />
     <Content Include="fonts\classy.svg" />
@@ -195,7 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
-    <Folder Include="NewFolder1\" />
     <Folder Include="public\" />
     <Folder Include="fonts\" />
     <Folder Include="public\images\" />
