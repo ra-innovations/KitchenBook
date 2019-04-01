@@ -6,6 +6,8 @@ dotenv.config();
 
 var debug = require('debug');
 var express = require('express');
+const basicAuth = require('express-basic-auth');
+
 var path = require('path');
 var favicon = require('serve-favicon');
 //Morgan is a HTTP request logger middleware for node.js
@@ -24,7 +26,12 @@ var routes = require('./routes/index');
 
 var app = express();
 
-//console.log("Here's the DB_USERNAME: " + process.env.DB_USERNAME);
+// TEMP password protect the website
+var sPwd = process.env.PASSWORD;
+app.use(basicAuth({
+    users: { admin: sPwd },
+    challenge: true // <--- needed to actually show the login dialog!
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

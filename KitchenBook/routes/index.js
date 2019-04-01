@@ -1,40 +1,41 @@
-﻿const express = require('express')
-const router = express.Router()
+﻿const express = require('express');
+const router = express.Router();
+var title = "KitchenBook";
 
 router.get('/', function (req, res)
 {
-    console.log('Request for home recieved')
-    res.render('index')
+    title = "KitchenBook";
+    res.render('index', { title });
 })
 
 router.get('/index', function (req, res)
 {
-    console.log('Request for home recieved')
-    res.render('index')
+    title = "KitchenBook";
+    res.render('index', { title })
 })
 
 router.get('/about', function (req, res)
 {
-    console.log('Request for about page recieved')
-    res.render('about')
+    title = "About Us";
+    res.render('about', { title })
 })
 
 router.get('/contact', function (req, res)
 {
-    console.log('Request for contact page recieved')
-    res.render('contact')
+    title = "Contact Us";
+    res.render('contact', { title })
 })
 
 router.get('/blog-post', function (req, res)
 {
-    console.log('Request for blog-post page recieved')
-    res.render('blog-post')
+    title = "Blog";
+    res.render('blog-post', { title })
 })
 
 router.get('/elements', function (req, res)
 {
-    console.log('Request for blog-post page recieved')
-    res.render('elements')
+    title = "Elements";
+    res.render('elements', { title })
 })
 
 router.get('/recipe-post', function (req, res)
@@ -43,6 +44,7 @@ router.get('/recipe-post', function (req, res)
     var sqlNode = require('tedious');
     var Connection = sqlNode.Connection;
     var Request = sqlNode.Request;
+    title = "Recipe";
 
     // define configurations for tedious
     var config = {
@@ -125,7 +127,7 @@ router.get('/recipe-post', function (req, res)
                 // Am having msSQL create the JSON in the stored proc. and then gathering in
                 // and parsing it into usable JSON
                 // {name that the webpage will use to access the object : value from the Request call
-                res.render("recipe-post", { aRecipe: JSON.parse(oneRecipe[0][0].value) });
+                res.render("recipe-post", { aRecipe: JSON.parse(oneRecipe[0][0].value), title });
             }
             connection.close();
         });
