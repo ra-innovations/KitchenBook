@@ -5,13 +5,19 @@ var title = "KitchenBook";
 router.get('/', function (req, res)
 {
     title = "KitchenBook";
-    res.render('index', { title });
+    res.render('elements', { title });
 })
 
 router.get('/index', function (req, res)
 {
     title = "KitchenBook";
     res.render('index', { title })
+})
+
+router.get('/elements', function (req, res)
+{
+    title = "KitchenBook";
+    res.render('elements', { title })
 })
 
 router.get('/about', function (req, res)

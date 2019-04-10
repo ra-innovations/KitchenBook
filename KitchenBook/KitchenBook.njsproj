@@ -36,9 +36,11 @@
     <Compile Include="public\javascripts\ajax.js" />
     <Compile Include="public\javascripts\bootstrap\bootstrap.min.js" />
     <Compile Include="public\javascripts\bootstrap\popper.min.js" />
+    <Compile Include="public\javascripts\ingredientsClass.js" />
     <Compile Include="public\javascripts\CommandFunctions.js" />
     <Compile Include="public\javascripts\google-map\map-active.js" />
     <Compile Include="public\javascripts\jquery\jquery-2.2.4.min.js" />
+    <Compile Include="public\javascripts\JSONData.js" />
     <Compile Include="public\javascripts\plugins\plugins.js" />
     <Compile Include="public\javascripts\site.js" />
     <Compile Include="public\lib\bootstrap\dist\js\bootstrap.bundle.js" />
