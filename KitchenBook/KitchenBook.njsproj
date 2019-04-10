@@ -120,6 +120,10 @@
     <Content Include="public\images\blog-img\1.jpg" />
     <Content Include="public\images\blog-img\2.jpg" />
     <Content Include="public\images\blog-img\3.jpg" />
+    <Content Include="public\images\buttons-img\Pause - Glassy Orange.jpg" />
+    <Content Include="public\images\buttons-img\Play - Glassy Orange.jpg" />
+    <Content Include="public\images\buttons-img\Stop - Glassy Orange.jpg" />
+    <Content Include="public\images\buttons-img\What - Glassy Orange.jpg" />
     <Content Include="public\images\core-img\burger.svg" />
     <Content Include="public\images\core-img\cake2.png" />
     <Content Include="public\images\core-img\favicon.ico" />
@@ -206,6 +210,7 @@
     <Folder Include="public\images\" />
     <Folder Include="public\images\bg-img\" />
     <Folder Include="public\images\blog-img\" />
+    <Folder Include="public\images\buttons-img\" />
     <Folder Include="public\images\core-img\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\javascripts\bootstrap\" />
