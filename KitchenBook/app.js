@@ -6,7 +6,6 @@ dotenv.config();
 
 var debug = require('debug');
 var express = require('express');
-const basicAuth = require('express-basic-auth');
 
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -25,13 +24,6 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 
 var app = express();
-
-// TEMP password protect the website
-var sPwd = process.env.PASSWORD;
-app.use(basicAuth({
-    users: { admin: sPwd },
-    challenge: true // <--- needed to actually show the login dialog!
-}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -69,7 +61,8 @@ app.use(function (req, res, next)
 // error handlers
 
 // development error handler
-// will print stacktrace
+// will print stacktrace.
+// debug: the page doesn't render, why?
 if (app.get('env') === 'development')
 {
     app.use(function (err, req, res, next)
@@ -77,21 +70,23 @@ if (app.get('env') === 'development')
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: err
+            error: err,
+            title: 'ERROR'
         });
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next)
-{
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+//app.use(function (err, req, res, next)
+//{
+//    res.status(err.status || 500);
+//    res.render('error', {
+//        message: err.message,
+//        error: {},
+//        title: 'ERROR'
+//    });
+//});
 
 app.set('port', process.env.PORT || 3000);
 

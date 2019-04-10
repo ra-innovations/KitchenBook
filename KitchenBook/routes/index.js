@@ -143,4 +143,12 @@ router.get('/recipe-post', function (req, res)
     }
 })
 
+// Do we need this since app.js has code (that doesn't work)
+//router.get('/error', function (err, req, res, next)
+//{
+//    title = "ERROR";
+//    res.render('error', { title })
+//})
+
+
 module.exports = router
