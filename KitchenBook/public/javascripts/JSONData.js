@@ -191,7 +191,7 @@ var strCommandFunctionJSON =
                     "Context": "",
                     "Command": "unknown",
                     "Function": "onUnknown"
-                    ,"Prompt":"sorry! I did not understand your request! Please say it again! Or say help for commands"
+                    ,"Prompt":"sorry! please repeat command, or say help for commands"
                 }, {
                     "CommandTableId": 911,
                     "Context": "",

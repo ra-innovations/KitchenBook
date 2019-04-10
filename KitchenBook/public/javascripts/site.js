@@ -14,14 +14,15 @@ myRecognition = null;
 //------------------------------------------------------------
 function onPressButton()
 {
-
-    say("Hi. Welcome! ");
-
     var strTextFromSpeech = document.getElementById("textFromSpeech").value;
-    //    if (strTextFromSpeech != '')
+    if (strTextFromSpeech != '')
     {
         strTextFromSpeech = strTextFromSpeech.toLowerCase();
         doCommand(strTextFromSpeech);
+    }
+    else
+    {
+        say('enter a command');
     }
 }
 
@@ -116,13 +117,13 @@ function parseSpeech(speech)
 
         if (arr.length = 2)   //Note if less than 2, there was no triggerword. If greater than 2, multiple triggerwords detected
         {
-            $('#textFromSpeech').empty();
-            $('#textFromSpeech').val(arr[1] + " - Parsed");
+            $('#strSpeechDisplay').empty();
+            $('#strSpeechDisplay').val(arr[1] + " - Parsed");
         }
         else
         {
-            $('#textFromSpeech').empty();
-            $('#textFromSpeech').val("You didn't say the keyword!");
+            $('#strSpeechDisplay').empty();
+            $('#strSpeechDisplay').val("You didn't say the keyword!");
         }
     }
 
@@ -142,7 +143,7 @@ function processCommand(event)
     else
     {
         //.. This is speech without keyword invocation
-        $('#textFromSpeech').val(speechToText + " - Giberish");
+        $('#strSpeechDisplay').val(speechToText + " - Giberish");
     }
 }
 
@@ -152,7 +153,7 @@ function endListening()
     if (!stopListening)
         myRecognition.start();
     else
-        $('#textFromSpeech').val('Exited');
+        $('#strSpeechDisplay').val('Exited');
 }
 //..........................................................................
 //.. Setup Speech Recognition
@@ -176,7 +177,7 @@ if (('SpeechRecognition' in window))
         if (!stopListening)
             myRecognition.start();
         else
-            $('#textFromSpeech').val('Exited');
+            $('#strSpeechDisplay').val('Exited');
     }
 
     myRecognition.start();
@@ -185,5 +186,5 @@ else
 {
     // speech recognition API not supported
     //alert('not');
-    $('#textFromSpeech').val('Aw. Looks like your browser does not support Web Speech API.  Update browser or try a different browser.');
+    $('#strSpeechDisplay').val('Aw. Looks like your browser does not support Web Speech API.  Update browser or try a different browser.');
 }
