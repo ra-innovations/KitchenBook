@@ -1,96 +1,123 @@
 ﻿<% include partials/header %>
 
-    <!-- ##### Breadcumb Area Start ##### -->
-    <div class="breadcumb-area bg-img bg-overlay" style="background-image: url(img/bg-img/breadcumb3.jpg);">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="breadcumb-text text-center">
-                        <h2>Recipe</h2>
-                    </div>
+<!-- ##### Breadcumb Area Start ##### -->
+<div class="breadcumb-area bg-img bg-overlay" style="background-image: url(img/bg-img/breadcumb3.jpg);">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="breadcumb-text text-center">
+                    <h2>Recipe</h2>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ##### Breadcumb Area End ##### -->
+</div>
+<!-- ##### Breadcumb Area End ##### -->
 
-    <div class="receipe-post-area section-padding-80">
+<div class="receipe-post-area section-padding-80">
 
-        <!-- Receipe Post Search -->
-        <div class="receipe-post-search mb-80">
-            <div class="container">
-                <form action="#" method="post">
-                    <div class="row">
-                        <div class="col-12 col-lg-3">
-                            <select name="select1" id="select1">
-                                <option value="1">All Recipes Categories</option>
-                                <option value="1">All Recipes Categories 2</option>
-                                <option value="1">All Recipes Categories 3</option>
-                                <option value="1">All Recipes Categories 4</option>
-                                <option value="1">All Recipes Categories 5</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-lg-3">
-                            <select name="select1" id="select2">
-                                <option value="1">All Recipes Categories</option>
-                                <option value="1">All Recipes Categories 2</option>
-                                <option value="1">All Recipes Categories 3</option>
-                                <option value="1">All Recipes Categories 4</option>
-                                <option value="1">All Recipes Categories 5</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-lg-3">
-                            <input type="search" name="search" placeholder="Search Recipes">
-                        </div>
-                        <div class="col-12 col-lg-3 text-right">
-                            <button type="submit" class="btn delicious-btn">Search</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Receipe Slider -->
+    <!-- Receipe Post Search -->
+    <div class="receipe-post-search mb-80">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="receipe-slider owl-carousel">
-                        <img src="img/bg-img/bg5.jpg" alt="">
-                        <img src="img/bg-img/bg5.jpg" alt="">
-                        <img src="img/bg-img/bg5.jpg" alt="">
+            <form action="#" method="post">
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        <select name="select1" id="select1">
+                            <option value="1">All Recipes Categories</option>
+                            <option value="1">All Recipes Categories 2</option>
+                            <option value="1">All Recipes Categories 3</option>
+                            <option value="1">All Recipes Categories 4</option>
+                            <option value="1">All Recipes Categories 5</option>
+                        </select>
                     </div>
+                    <div class="col-12 col-lg-3">
+                        <select name="select1" id="select2">
+                            <option value="1">All Recipes Categories</option>
+                            <option value="1">All Recipes Categories 2</option>
+                            <option value="1">All Recipes Categories 3</option>
+                            <option value="1">All Recipes Categories 4</option>
+                            <option value="1">All Recipes Categories 5</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <input type="search" name="search" placeholder="Search Recipes">
+                    </div>
+                    <div class="col-12 col-lg-3 text-right">
+                        <button type="submit" class="btn delicious-btn">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Receipe Slider -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="receipe-slider owl-carousel">
+                    <% for (var i = 0; i < aRecipe.Media.length; i++){
+                    if(aRecipe.Media[i].Media.MediaType == 'V') { %>
+                    <div class="item">
+                        <iframe type="text/html" width="720" height="405"
+                                src="/media/<%= aRecipe.Media[i].Media.FileName %><%= aRecipe.Media[i].Media.FileExtension %>"
+                                frameborder="0" allowfullscreen id="<%= aRecipe.Title %>_image<%= i %>"></iframe>
+                    </div>
+                    <% }else{ %>
+                    <img src="/media/<%= aRecipe.Media[i].Media.FileName %><%= aRecipe.Media[i].Media.FileExtension %>"
+                         alt="<%= aRecipe.Title %>_image<%= i %>">
+                    <% }
+                    }%>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Receipe Content Area -->
-        <div class="receipe-content-area">
-            <div class="container">
+    <!-- Receipe Content Area -->
+    <div class="receipe-content-area">
+        <div class="container">
 
+            <form name="formRecipe" class="newsletter-form" action="/recipe-post">
                 <div class="row">
                     <div class="col-12 col-md-8">
                         <div class="receipe-headline my-5">
                             <span><%= aRecipe.DateAdded %></span>
-                            <h2><%= aRecipe.Title %></h2>
+                            <h1><input type="text" class="form-control" id="txtSource" value="<%= aRecipe.Title %>" /></h1>
                             <div class="receipe-duration">
-                                <h6>Prep: <%= aRecipe.PrepTime %> minutes</h6>
-                                <h6>Cook: <%= aRecipe.CookTime %> minutes</h6>
-                                <h6>Yields: <%= aRecipe.Yield %> Servings</h6>
+                                <h6>Recipe by: <input type="text" class="form-control" id="txtAuthor" value="<%= aRecipe.Author %>" /></h6>
+                                <h6>Source: <input type="text" class="form-control" id="txtSource" value="<%= aRecipe.Source %>" /></h6>
+                                <br />
+                                <h6>
+                                    Prep: <input type="text" class="receipe-post-search" id="txtPrepTime" value="<%= aRecipe.PrepTime %>" />
+                                    minutes
+                                </h6>
+                                <h6>Cook: <input type="text" size="5" id="txtCookTime" value="<%= aRecipe.CookTime %>" /> minutes</h6>
+                                <h6>Yields: <input type="text" size="5" id="txtYield" value="<%= aRecipe.Yield %>" /> Servings</h6>
                             </div>
+                            <br />
+                            <span id="recipeDescription" class="form-control single-cool-fact">
+                                <input type="text" class="form-control" id="txtDescription" value="<%= aRecipe.Description %>" />
+                            </span>
                         </div>
                     </div>
 
                     <div class="col-12 col-md-4">
                         <div class="receipe-ratings text-right my-5">
                             <div class="ratings">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                <% for (var i = 0; i < aRecipe.Rating[0].Average; i++){ %>
+                                <i class="fa fa-star" aria-hidden="true" onclick="fav(this);"></i>
+                                <% } %>
+                                <% for (var j = aRecipe.Rating[0].Average; j < 5; j++){ %>
+                                <i class="fa fa-star-o" aria-hidden="true" onclick="fav(this);"></i>
+                                <% } %>
                             </div>
                             <a href="#" class="btn delicious-btn"><%= aRecipe.SkillLevel %></a>
                         </div>
+
+                        <!-- Tags -->
+                        <div class="ingredients">
+                            <h4>Tags</h4> <input type="text" class="form-control" id="txtTags" value="<%= aRecipe.Tags %>" />
+                        </div>
+
                     </div>
                 </div>
 
@@ -99,8 +126,10 @@
                         <!-- Single Preparation Step -->
                         <% for (var i = 0; i < aRecipe.Steps.length; i++){ %>
                         <div class="single-preparation-step d-flex">
-                            <h4><%= aRecipe.Steps[i].Step.StepNumber %></h4>
-                            <p><%= aRecipe.Steps[i].Step.Info %></p>
+                            <h4>
+                                <%= aRecipe.Steps[i].Step.StepNumber %>
+                            </h4>
+                            <textarea class="form-control" style="height:100%" id="txtStepInfo<%=i%>" placeholder="Insert Step Here"><%= aRecipe.Steps[i].Step.Info %></textarea>
                         </div>
                         <% } %>
                     </div>
@@ -114,49 +143,69 @@
                             <% for (var i = 0; i < aRecipe.Ingredients.length; i++){ %>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="customCheck<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>">
-                                <label class="custom-control-label" for="customCheck<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>"><%= aRecipe.Ingredients[i].Ingredient.Ingredient %></label>
+                                <label class="custom-control-label" for="customCheck<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>"><input type="text" class="form-control" id="txtIngredient<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>" value="<%= aRecipe.Ingredients[i].Ingredient.Ingredient %>" /></label>
                             </div>
                             <% } %>
 
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
-                    <div class="col-12">
-                        <div class="section-heading text-left">
-                            <h3>Leave a comment</h3>
-                        </div>
+                    <button type="submit" class="btn delicious-btn">Post</button>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading text-left">
+                        <h3>Leave a comment</h3>
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="contact-form-area">
-                            <form action="#" method="post">
-                                <div class="row">
-                                    <div class="col-12 col-lg-6">
-                                        <input type="text" class="form-control" id="name" placeholder="Name">
-                                    </div>
-                                    <div class="col-12 col-lg-6">
-                                        <input type="email" class="form-control" id="email" placeholder="E-mail">
-                                    </div>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="subject" placeholder="Subject">
-                                    </div>
-                                    <div class="col-12">
-                                        <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn delicious-btn mt-30" type="submit">Post Comments</button>
-                                    </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="contact-form-area">
+                        <form action="#" method="post">
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <input type="text" class="form-control" id="name" placeholder="Name">
                                 </div>
-                            </form>
-                        </div>
+                                <div class="col-12 col-lg-6">
+                                    <input type="email" class="form-control" id="email" placeholder="E-mail">
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control" id="subject" placeholder="Subject">
+                                </div>
+                                <div class="col-12">
+                                    <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn delicious-btn mt-30" type="submit">Post Comments</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<script>
+    function fav(e)
+    {
+        $(e).toggleClass('fa-star-o fa-star');
+    }
 
+    $(document).ready(function ()
+    {
+        $('textarea').each(function ()
+        {
+            var textArea = $(this); // This is the jquery object of the input, do what you will
+            var sHeight = 5 + $(textArea).prop('scrollHeight') + 'px';
+            //alert(sHeight);
+            textArea.css('height', sHeight);
+        });
+    });
+</script>
 <% include partials/footer %>

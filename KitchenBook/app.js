@@ -16,7 +16,8 @@ var logger = require('morgan');
  * It is written on top of busboy for maximum efficiency.
  * NOTE: Multer will not process any form which is not multipart(multipart / form - data).
  */
-//var multer = require('multer');
+var multer = require('multer');
+
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -46,6 +47,8 @@ app.use('/js', express.static(path.join(__dirname, 'public/javascripts')));
 app.use('/img', express.static(path.join(__dirname, 'public/images')));
 //assign a virtual path of '/css' for the 'public/stylesheets' folder on the server
 app.use('/css', express.static(path.join(__dirname, 'public/stylesheets')));
+//assign a virtual path of '/upload' for the 'public/upload/media' folder on the server
+app.use('/media', express.static(path.join(__dirname, 'public/upload/media')));
 
 // use the defined routes
 app.use('/', routes);
@@ -78,15 +81,15 @@ if (app.get('env') === 'development')
 
 // production error handler
 // no stacktraces leaked to user
-//app.use(function (err, req, res, next)
-//{
-//    res.status(err.status || 500);
-//    res.render('error', {
-//        message: err.message,
-//        error: {},
-//        title: 'ERROR'
-//    });
-//});
+app.use(function (err, req, res, next)
+{
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {},
+        title: 'ERROR'
+    });
+});
 
 app.set('port', process.env.PORT || 3000);
 
@@ -94,11 +97,3 @@ var server = app.listen(app.get('port'), function ()
 {
     debug('Express server listening on port ' + server.address().port);
 });
-
-
-
-
-
-
-
-

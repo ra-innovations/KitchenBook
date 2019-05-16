@@ -7,6 +7,9 @@
     <RootNamespace>KitchenBook</RootNamespace>
     <LastActiveSolutionConfig>Release|Any CPU</LastActiveSolutionConfig>
     <NameOfLastUsedPublishProfile>KitchenBook at Local Folder</NameOfLastUsedPublishProfile>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+    <ScriptArguments>
+    </ScriptArguments>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -22,7 +25,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
     <NodejsPort>1337</NodejsPort>
-    <StartWebBrowser>true</StartWebBrowser>
+    <StartWebBrowser>True</StartWebBrowser>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +42,7 @@
     <Compile Include="public\javascripts\ingredientsClass.js" />
     <Compile Include="public\javascripts\CommandFunctions.js" />
     <Compile Include="public\javascripts\google-map\map-active.js" />
+    <Compile Include="public\javascripts\jquery.autogrow-textarea.js" />
     <Compile Include="public\javascripts\jquery\jquery-2.2.4.min.js" />
     <Compile Include="public\javascripts\JSONData.js" />
     <Compile Include="public\javascripts\plugins\plugins.js" />
@@ -180,12 +184,20 @@
     <Content Include="public\stylesheets\owl.carousel.min.css" />
     <Content Include="public\stylesheets\site.css" />
     <Content Include="public\stylesheets\style.css" />
+    <Content Include="public\upload\media\1_1_0_1-2-3-4 Cake Video.mp4" />
+    <Content Include="public\upload\media\1_1_0_20190512_154545.jpg" />
+    <Content Include="public\upload\media\1_1_0_Basic 1-2-3-4 Cake.jpg" />
+    <Content Include="public\upload\media\1_1_0_Szechuan Eating.jpg" />
+    <Content Include="public\upload\media\1_2_0_Another 1-2-3-4 Cake Pic.jpg" />
     <Content Include="README.md" />
     <Content Include="public\scss\style.scss" />
     <Content Include="public\scss\_fonts.scss" />
     <Content Include="public\scss\_mixin.scss" />
     <Content Include="public\scss\_responsive.scss" />
     <Content Include="public\scss\_theme_color.scss" />
+    <Content Include="Test Overlay.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\about.ejs">
       <SubType>Code</SubType>
     </Content>
@@ -228,6 +240,8 @@
     <Folder Include="public\lib\jquery\" />
     <Folder Include="public\lib\jquery\dist\" />
     <Folder Include="public\stylesheets\" />
+    <Folder Include="public\upload\" />
+    <Folder Include="public\upload\media\" />
     <Folder Include="routes\" />
     <Folder Include="public\scss\" />
     <Folder Include="views\" />
