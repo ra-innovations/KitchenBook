@@ -46,7 +46,7 @@
                         <button type="submit" class="btn delicious-btn">Search</button>
                     </div>
                 </div>
-            </form>
+            </form><!--End recipe post search form-->
         </div>
     </div>
 
@@ -54,138 +54,235 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <div class="receipe-slider owl-carousel">
-                    <% for (var i = 0; i < aRecipe.Media.length; i++){
-                    if(aRecipe.Media[i].Media.MediaType == 'V') { %>
-                    <div class="item">
-                        <iframe type="text/html" width="720" height="405"
-                                src="/media/<%= aRecipe.Media[i].Media.FileName %><%= aRecipe.Media[i].Media.FileExtension %>"
-                                frameborder="0" allowfullscreen id="<%= aRecipe.Title %>_image<%= i %>"></iframe>
-                    </div>
-                    <% }else{ %>
-                    <img src="/media/<%= aRecipe.Media[i].Media.FileName %><%= aRecipe.Media[i].Media.FileExtension %>"
-                         alt="<%= aRecipe.Title %>_image<%= i %>">
-                    <% }
-                    }%>
+                <!-- Media from Provider -->
+                <%
+                if (aRecipe.hasOwnProperty('VideoFileName')) // video file
+                {
+                %>
+                <div class="item">
+                    <video width="720" height="405" controls>
+                        <source src="/media/<%= aRecipe.VideoFileName %>"
+                                type="video/mp4" id="<%= aRecipe.Title %>_video<%= i %>">
+                    </video>
                 </div>
+                <%
+                }
+                else if (aRecipe.hasOwnProperty('ImageFileName')) // image file
+                {
+                %>
+                <img src="/media/<%= aRecipe.ImageFileName %>"
+                     alt="<%= aRecipe.Title %>_image<%= i %>">
+                <%
+                }
+                else if (aRecipe.hasOwnProperty('AudioFileName')) // audio file
+                {
+                %>
+                <audio controls src="/media/<%= aRecipe.AudioFileName %>"></audio>
+                <%
+                }
+                %>
+
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Receipe Content Area -->
-    <div class="receipe-content-area">
-        <div class="container">
+<!-- Receipe Content Area -->
+<div class="receipe-content-area">
+    <div class="container">
 
-            <form name="formRecipe" class="newsletter-form" action="/recipe-post">
-                <div class="row">
-                    <div class="col-12 col-md-8">
-                        <div class="receipe-headline my-5">
-                            <span><%= aRecipe.DateAdded %></span>
-                            <h1><input type="text" class="form-control" id="txtSource" value="<%= aRecipe.Title %>" /></h1>
-                            <div class="receipe-duration">
-                                <h6>Recipe by: <input type="text" class="form-control" id="txtAuthor" value="<%= aRecipe.Author %>" /></h6>
-                                <h6>Source: <input type="text" class="form-control" id="txtSource" value="<%= aRecipe.Source %>" /></h6>
-                                <br />
-                                <h6>
-                                    Prep: <input type="text" class="receipe-post-search" id="txtPrepTime" value="<%= aRecipe.PrepTime %>" />
-                                    minutes
-                                </h6>
-                                <h6>Cook: <input type="text" size="5" id="txtCookTime" value="<%= aRecipe.CookTime %>" /> minutes</h6>
-                                <h6>Yields: <input type="text" size="5" id="txtYield" value="<%= aRecipe.Yield %>" /> Servings</h6>
-                            </div>
-                            <br />
-                            <span id="recipeDescription" class="form-control single-cool-fact">
-                                <input type="text" class="form-control" id="txtDescription" value="<%= aRecipe.Description %>" />
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <div class="receipe-ratings text-right my-5">
-                            <div class="ratings">
-                                <% for (var i = 0; i < aRecipe.Rating[0].Average; i++){ %>
-                                <i class="fa fa-star" aria-hidden="true" onclick="fav(this);"></i>
-                                <% } %>
-                                <% for (var j = aRecipe.Rating[0].Average; j < 5; j++){ %>
-                                <i class="fa fa-star-o" aria-hidden="true" onclick="fav(this);"></i>
-                                <% } %>
-                            </div>
-                            <a href="#" class="btn delicious-btn"><%= aRecipe.SkillLevel %></a>
-                        </div>
-
-                        <!-- Tags -->
-                        <div class="ingredients">
-                            <h4>Tags</h4> <input type="text" class="form-control" id="txtTags" value="<%= aRecipe.Tags %>" />
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <!-- Single Preparation Step -->
-                        <% for (var i = 0; i < aRecipe.Steps.length; i++){ %>
-                        <div class="single-preparation-step d-flex">
-                            <h4>
-                                <%= aRecipe.Steps[i].Step.StepNumber %>
-                            </h4>
-                            <textarea class="form-control" style="height:100%" id="txtStepInfo<%=i%>" placeholder="Insert Step Here"><%= aRecipe.Steps[i].Step.Info %></textarea>
-                        </div>
-                        <% } %>
-                    </div>
-
-                    <!-- Ingredients -->
-                    <div class="col-12 col-lg-4">
-                        <div class="ingredients">
-                            <h4>Ingredients</h4>
-
-                            <!-- Custom Checkbox -->
-                            <% for (var i = 0; i < aRecipe.Ingredients.length; i++){ %>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>">
-                                <label class="custom-control-label" for="customCheck<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>"><input type="text" class="form-control" id="txtIngredient<%= aRecipe.Ingredients[i].Ingredient.IngredientId %>" value="<%= aRecipe.Ingredients[i].Ingredient.Ingredient %>" /></label>
-                            </div>
-                            <% } %>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <button type="submit" class="btn delicious-btn">Post</button>
-                </div>
-            </form>
-
+        <form name="formRecipe" class="newsletter-form" action="/recipe-save" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-12">
-                    <div class="section-heading text-left">
-                        <h3>Leave a comment</h3>
+                <div class="col-12 col-md-8">
+                    <div class="receipe-headline my-5">
+                        <span><%= aRecipe.DateAdded %></span>
+                        <h4>Title</h4>
+                        <input type="text" class="form-control" name="txtTitle" id="txtTitle" value="<%= aRecipe.Title %>" />
+                        <br />
+                        <div class="receipe-duration">
+                            <h6>Author: <input type="text" class="form-control" name="txtAuthor" id="txtAuthor" value="<%= aRecipe.Author %>" /></h6>
+                            <h6>Source: <input type="text" class="form-control" name="txtSource" id="txtSource" value="<%= aRecipe.Source %>" /></h6>
+                            <br />
+                            <h6>
+                                Prep: <input type="text" class="form-control custom-file" style="width:50px;" name="txtPrepTime" id="txtPrepTime" value="<%= aRecipe.PrepTime %>" />
+                                minutes
+                            </h6>
+                            <h6>Cook: <input type="text" class="form-control custom-file" style="width:50px;" name="txtCookTime" id="txtCookTime" value="<%= aRecipe.CookTime %>" /> minutes</h6>
+                            <h6>Yields: <input type="text" class="form-control custom-file" style="width:50px;" name="txtYield" id="txtYield" value="<%= aRecipe.Yield %>" /> Servings</h6>
+                        </div>
+                        <br />
+                        <span id="recipeDescription" class="form-control single-cool-fact">
+                            <input type="text" class="form-control" name="txtDescription" id="txtDescription" value="<%= aRecipe.Description %>" />
+                        </span>
                     </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="receipe-ratings text-right my-5">
+                        <div class="ratings">
+                            <% for (var i = 0; i < aRecipe.Rating[0].Average; i++){ %>
+                            <i class="fa fa-star" aria-hidden="true" onclick="fav(this);"></i>
+                            <% }
+                            for (var j = aRecipe.Rating[0].Average; j < 5; j++){ %>
+                            <i class="fa fa-star-o" aria-hidden="true" onclick="fav(this);"></i>
+                            <% } %>
+                        </div>
+                        <!-- TODO: a drop down created by the db SkillLevel lookup table -->
+                        <a href="#" class="btn delicious-btn"><%= aRecipe.SkillLevel %></a>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="tags">
+                        <!-- TODO create a class that looks like ingredients and call it tags-->
+                        <h4>Tags</h4> <input type="text" class="form-control" id="txtTags" name="txtTags" value="<%= aRecipe.Tags %>" />
+                    </div>
+
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <div class="contact-form-area">
-                        <form action="#" method="post">
-                            <div class="row">
-                                <div class="col-12 col-lg-6">
-                                    <input type="text" class="form-control" id="name" placeholder="Name">
-                                </div>
-                                <div class="col-12 col-lg-6">
-                                    <input type="email" class="form-control" id="email" placeholder="E-mail">
-                                </div>
-                                <div class="col-12">
-                                    <input type="text" class="form-control" id="subject" placeholder="Subject">
-                                </div>
-                                <div class="col-12">
-                                    <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn delicious-btn mt-30" type="submit">Post Comments</button>
-                                </div>
-                            </div>
-                        </form>
+                <div class="col-12 col-md-8 steps">
+                    <!-- Single Preparation Step -->
+                    <h4>Steps</h4>
+                    <%
+                    var hasStepMedia = false;
+                    var whichFile = '';
+                    // Loop through the Steps
+                    for (var i = 0; i < aRecipe.Steps.length; i++)
+                    { %>
+                    <!--<div class="single-preparation-step d-flex" style="border:double">-->
+                    <div class="d-flex">
+                        <h4>
+                            <%= aRecipe.Steps[i].Step.StepNumber %>
+                        </h4>
+                        <textarea class="form-control" name="txtStep[]" id="txtStepInfo<%=i+1%>"
+                                  placeholder="Insert Step Here"><%= aRecipe.Steps[i].Step.Info %></textarea>
+
+                        <!-- Step Videos -->
+                        <% if(aRecipe.Steps[i].hasOwnProperty('VideoFileName'))
+                        {
+                        %>
+                        <div id="<%= aRecipe.Steps[i].VideoFileName %>" class="item" style="border:double">
+                            <video width="240" height="240" controls>
+                                <!--TODO create a style for step videos can NOT hardcode type-->
+                                <source src="/media/<%= aRecipe.Steps[i].VideoFileName %>"
+                                        type="video/mp4" id="<%= aRecipe.Title %>_video_for_step_<%= i+1 %>">
+                            </video>
+                        </div>
+                        <%
+                        hasStepMedia = true;
+                        whichFile = aRecipe.Steps[i].VideoFileName;
+                        }
+                        else if(aRecipe.Steps[i].ImageFileName)
+                        {
+                        %>
+                        <img src="/media/<%= aRecipe.Steps[i].ImageFileName %>" id="<%= aRecipe.Steps[i].ImageFileName %>"
+                             alt="<%= aRecipe.Title %>_image_for_step_<%= i+1 %>">
+                        <%
+                        hasStepMedia = true;
+                        whichFile = aRecipe.Steps[i].ImageFileName;
+                        }
+                        else if(aRecipe.Steps[i].AudioFileName)
+                        {
+                        %>
+                        <audio controls src="/media/<%= aRecipe.Steps[i].AudioFileName %>" id="<%= aRecipe.Steps[i].AudioFileName %>"></audio>
+                        hasStepMedia = true;
+                        whichFile = aRecipe.Steps[i].AudioFileName;
+                        <%
+                        }
+                        else
+                        {
+                        hasStepMedia = false;
+                        whichFile = '';
+                        }
+                        %>
+
+                        <!--placing something here show up to the far right of every step-->
+
                     </div>
+                    <% if(hasStepMedia)
+                    {%>
+                    <!-- placing something here shows under every STEP-->
+                    <!-- TODO Code for deleting Media -->
+                    <div style="text-align:right">
+                        <span name="image_data" id="image_data<%=i+1%>">image data</span>
+                        <span><a href="javascript:deleteMedia('<%=whichFile%>', <%=aRecipe.User[0].User.UserId%>, <%=aRecipe.RecipeId%>, <%=aRecipe.Steps[i].Step.StepNumber%>);">Delete Media</a></span>
+                    </div>
+                    <%
+                    hasStepMedia = false;
+                    whichFile = '';
+                    }
+                    else
+                    {%>
+                    <div style="text-align:right">
+                        <span name="image_data" id="image_data<%=i+1%>">image data</span>
+                        <span><input type="file" accept=".jpg, .jpeg, .png, .gif, .avi, .mpg, .mpeg, .mp4, .mp3" name="media"></span>
+                    </div>
+                    <%} // end if
+
+                    } // end for %>
+                </div>
+
+                <!-- Ingredients -->
+                <div class="col-12 col-md-4">
+                    <div class="ingredients">
+                        <h4>Ingredients</h4>
+                        <% for (var i = 0; i < aRecipe.Ingredients.length; i++){ %>
+                        <div class="single-preparation-step d-flex">
+                            <input type="text" class="form-control" name="txtIngredient[]"
+                                   id="txtIngredient<%= aRecipe.Ingredients[i].Ingredient.IngredientNumber %>"
+                                   value="<%= aRecipe.Ingredients[i].Ingredient.Ingredient %>" />
+                            <a href="#" class="remove_field">Remove</a>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="input_fields_wrap">
+                        <button class="add_ingredient_button">Add More Ingredients</button>
+                    </div>
+                </div>
+            </div>
+            <div class="input_fields_wrap row">
+                <button class="add_step_button">Add More Steps</button>
+            </div>
+            <br />        
+            <div class="row">
+                <button type="submit" class="btn delicious-btn">Post</button>
+            </div>
+
+            <input type="text" hidden="hidden" name="userId" value="<%=aRecipe.User[0].User.UserId%>" />
+            <input type="text" hidden="hidden" name="recipeId" value="<%=aRecipe.RecipeId%>" />
+        </form><!--End formRecipe-->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading text-left">
+                    <h3>Leave a comment</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="contact-form-area">
+                    <form action="#" method="post">
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <input type="text" class="form-control" name="txtName" id="name" placeholder="Name">
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <input type="email" class="form-control" name="txtEmail" id="email" placeholder="E-mail">
+                            </div>
+                            <div class="col-12">
+                                <input type="text" class="form-control" name="txtSubject" id="subject" placeholder="Subject">
+                            </div>
+                            <div class="col-12">
+                                <textarea name="txtMessage" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn delicious-btn mt-30" type="submit">Post Comments</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -197,15 +294,137 @@
         $(e).toggleClass('fa-star-o fa-star');
     }
 
+    function deleteMedia(whichMedia, userId, recipeId, stepNumber)
+    {
+        //alert("file:" + whichMedia + "\n userId:" + userId + "\n recipeId:" + recipeId + "\n stepNumber:" + stepNumber);
+        var toDelete = whichMedia;
+        $.ajax({
+            url: "/deleteMedia",
+            method: "POST",
+            data: { media: toDelete, userId: userId, recipeId: recipeId, stepNumber: stepNumber },
+            success: function (msg)
+            {
+                //alert(msg.errorCode);
+                $('#image_data' + stepNumber).html(msg.message);
+
+                if (msg.errorCode == 0)
+                {
+                    var placeItHere = "#image_data" + stepNumber
+
+                    // hide the media that was deleted
+                    $("[id^='" + whichMedia + "']").hide();
+
+                    // show the file input for selecting a new media file
+                    $(placeItHere).prepend('<span><input type="file" accept=".jpg, .jpeg, .png, .gif, .avi, .mpg, .mpeg, .mp4, .mp3" name="media"></span>');
+                }
+            }
+
+        });
+    }
+
     $(document).ready(function ()
     {
+        //add an extra ingredient slot
+        $(".add_ingredient_button").click(function (e)
+        { //on add input button click
+            e.preventDefault();
+            $(".ingredients").append('<div class="single-preparation-step d-flex"><input type="text" class="form-control" name="txtIngredient[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+        });
+        //remove ingredient slot
+        $(".ingredients").on("click", ".remove_field", function (e)
+        { //user click on remove text
+            e.preventDefault();
+            $(this).parent('div').remove(); x--;
+        })
+
+        //add an extra step slot
+        $(".add_step_button").click(function (e)
+        { //on add input button click
+            e.preventDefault();
+            var stepNum = $(".steps").last("h4").val();
+            $(".steps").last().append('<div class="d-flex"><h4>').append(stepNum)
+                .append('</h4 > <textarea class="form-control" name="txtStep[]" placeholder="Insert Step Here"></textarea></div>')
+                .append('<div style="text-align:right">')
+                .append('<span name="image_data[]">image data</span>')
+                .append('<span><input type="file" accept=".jpg, .jpeg, .png, .gif, .avi, .mpg, .mpeg, .mp4, .mp3" name="media"></span></div>'); //add text area
+        });
+        //remove step slot
+        $(".steps").on("click", ".remove_field", function (e)
+        { //user click on remove text
+            e.preventDefault();
+            $(this).parent('div').remove(); x--;
+        })
+
         $('textarea').each(function ()
         {
             var textArea = $(this); // This is the jquery object of the input, do what you will
             var sHeight = 5 + $(textArea).prop('scrollHeight') + 'px';
             //alert(sHeight);
+           
             textArea.css('height', sHeight);
+        });
+
+        $('#new-todo-form').submit(function (event)
+        {
+            event.preventDefault();
+            var toDoItem = $(this).serialize();
+            $.post('/todos', toDoItem, function (data)
+            {
+                $('#todo-list').append(
+                    `
+            <li class="list-group-item">
+                <form action="/todos/${data._id}" method="POST" class="edit-item-form">
+					<div class="form-group">
+						<label for="${data._id}">Item Text</label>
+						<input type="text" value="${data.text}" name="todo[text]" class="form-control" id="${data._id}">
+					</div>
+					<button class="btn btn-primary">Update Item</button>
+				</form>
+				<span class="lead">
+					${data.text}
+				</span>
+				<div class="pull-right">
+					<button class="btn btn-sm btn-warning edit-button">Edit</button>
+					<form style="display: inline" method="POST" action="/todos/${data._id}" class="delete-item-form">
+						<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+					</form>
+				</div>
+				<div class="clearfix"></div>
+			</li>
+            `
+                )
+                $('#new-todo-form').find('.form-control').val('');
+            });
         });
     });
 </script>
+<%
+
+
+  function getStepNumber(f)
+    {
+        const STEP_NUMBER = '2';
+        return f.split("_")[STEP_NUMBER];
+    }
+
+    // file format is: RECIPEID_USERID_STEPNUMBER_RECIPETITLE.MEDIAFILEEXTENTION
+
+    function isStepVideo(f)
+    {
+        const IS_RECIPE_MEDIA = '0';
+        const STEP_NUMBER = '2';
+        if ((f.split("_"))[STEP_NUMBER] !== IS_RECIPE_MEDIA) return true;
+
+        return false;
+    }
+
+    function isUserVideo(f, u)
+    {
+        const USER_ID = '1';
+        if ((f.split("_"))[USER_ID] == u) return true;
+
+        return false;
+    }
+
+%>
 <% include partials/footer %>

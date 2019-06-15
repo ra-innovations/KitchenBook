@@ -8,6 +8,7 @@ var debug = require('debug');
 var express = require('express');
 
 var path = require('path');
+global.appRoot = path.resolve(__dirname);
 var favicon = require('serve-favicon');
 //Morgan is a HTTP request logger middleware for node.js
 var logger = require('morgan');
@@ -37,8 +38,12 @@ app.set("view engine", "ejs");
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: false
+})); 
+
 app.use(cookieParser());
 
 //assign a virtual path of '/js' for the 'public/javascript' folder on the server

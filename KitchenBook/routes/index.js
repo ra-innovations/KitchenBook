@@ -1,5 +1,5 @@
-﻿const express = require('express');
-const router = express.Router();
+﻿var express = require('express');
+var router = express.Router();
 var title = "KitchenBook";
 
 // set up tedious variables
@@ -7,6 +7,9 @@ var sqlNode = require('tedious');
 var Connection = sqlNode.Connection;
 var Request = sqlNode.Request;
 title = "Recipe";
+
+var multer = require('multer');
+const path = require('path');
 
 // define configurations for tedious
 var config = {
@@ -88,8 +91,6 @@ router.get('/elements', function (req, res)
 
 // test scenerio for uploading photos
 // You can also upload an array of photos instead of a single photo with this library. You will just need to use upload.array() in place of upload.single().
-var multer = require('multer');
-const path = require('path');
 router.post('/upload', function (req, res)
 {
     var fileName = "";
@@ -97,7 +98,7 @@ router.post('/upload', function (req, res)
         destination: './public/upload/media',
         filename: function (req, file, callback)
         {
-            // format for a filename is: USERID_RECIPEID_STEPID_RECIPETITLE.MEDIAFILEEXTENTION (STEPID = 0 for Recipe image/video)
+            // format for a filename is: USERID_RECIPEID_STEPNUMBER_RECIPETITLE(or file orig name).MEDIAFILEEXTENTION (STEPID = 0 for Recipe image/video)
             fileName = "1_1_0_" + file.originalname;
             callback(null, fileName);
         }
@@ -156,6 +157,260 @@ router.post('/upload', function (req, res)
     });
 });
 
+router.post('/deleteMedia', function (req, res)
+{
+    // DEBUG
+    var msg = { "message": "File deleted.", "errorCode": "0", "errorMessage": "" };
+    res.json(msg);
+    // comment everything else below so it doesn't run
+    
+    //req.body.media has the filename to delete
+    var fileToDelete = req.body.media;
+    var userId = req.body.userId;
+    var recipeId = req.body.recipeId;
+    var stepNumber = req.body.stepNumber;
+
+    fileToDelete = path.join(appRoot, 'public/upload/media/' + fileToDelete);
+    const fs = require('fs');
+
+    // Delete file from the file system
+    fs.unlink(fileToDelete, (err) =>
+    {
+        if (err)
+        {
+            // TODO send the issue back to the user
+            console.log("delete issue");//throw err;
+        }
+        else
+        {
+            console.log('successfully deleted: ' + fileToDelete);
+
+            // create a connection to the server using the configuration options we defined above
+            var connection = new Connection(config);
+            connection.on('connect', function (err)
+            {
+                if (err)
+                {
+                    console.log(err);
+                    // TODO, send a pretty error back to the user.
+                    //next(err);
+                }
+                else
+                {
+                    // Remove filename DB entries
+                    //sp_deleteMediaFiles
+                    //@fileName nvarchar(100), 
+                    //@userId int,
+                    //@recipeId int,
+                    //@stepNumber int = 0
+                    var TYPES = require('tedious').TYPES;
+                    var sqlStatement = 'sp_deleteMediaFiles';
+                    var msg = "";
+
+                    var request = new Request(sqlStatement, function (err, rowCount, rows)
+                    {
+                        if (err)
+                        {
+                            console.log(err);
+                            msg = err.message;
+                        } else
+                        {
+                            if (req.xhr)
+                            {
+                                var msg = { "message": "File deleted.", "errorCode": "0", "errorMessage": "" };
+                                res.json(msg);
+                                console.log("ajax");
+                            }
+                            else
+                            {
+                                res.render("recipe-post", { msg: msg, title });
+                                console.log("no ajax");
+                            }
+                        }
+                        connection.close();
+                    });
+
+                    request.addParameter('fileName', TYPES.NVarChar, path.basename(fileToDelete));
+                    request.addParameter('userId', TYPES.Int, userId);
+                    request.addParameter('recipeId', TYPES.Int, recipeId);
+                    request.addParameter('stepNumber', TYPES.Int, stepNumber);
+
+                    connection.callProcedure(request);
+                }
+            });
+        }
+    });
+});
+
+router.post('/recipe-save', function (req, res)
+{
+    // create a connection to the server using the configuration options we defined above
+    var connection = new Connection(config);
+
+    // LOOK AT THE REQUEST BODY FIRST
+    console.log(req.body);
+    //res.send(req.body);
+    // and even though we send something to the response,  the code below still gets processed.
+
+    // Keep incase debug is needed
+    //connection.on('error', function (err)
+    //{
+    //    console.log(err);
+    //});
+
+    //connection.on('debug', function (debugMessage)
+    //{
+    //    console.log(debugMessage);
+    //});
+
+    connection.on('connect', function (err)
+    {
+        if (err)
+        {
+            console.log(err);
+            // TODO, send a pretty error back to the user.
+            //next(err);
+        } else
+        {
+            executeStatement();
+        }
+    });
+
+    function executeStatement()
+    {
+        var TYPES = require('tedious').TYPES;
+        var sqlStatement = 'sp_putRecipe';
+        var msg = "";
+
+        var request = new Request(sqlStatement, function (err, rowCount, RecipeId)
+        {
+            if (err)
+            {
+                console.log(err);
+                // TODO, send a pretty error back to the user.
+            } else
+            {
+                // {name that the webpage will use to access the object : a success statement if the 
+                // returned RecipeId is not null and greater than 0
+                if (RecipeId && RecipeId > 0)
+                {
+                    msg = { "message": "Your recipe has been posted.", "errorCode": "0", "errorMessage": "" };
+                }
+                else
+                {
+                    msg = { "message": "There was a problem posting your recipe.", "errorCode": "1", "errorMessage": err };
+                }
+
+                res.render("recipe-post", { msg: msg, title });
+            }
+            connection.close();
+        });
+
+        // build the arrays for Ingredients and Steps
+        // The IngredientTableType needs this:
+        //[RecipeId][int] NULL,
+        //[Ingredient][nvarchar](1000) NULL
+        // We'll insert a 0 for both IngredientId and RecipeId bc the entry in the DB hasn't been created yet
+        // This is what a new recipe post ingredient list might look like.
+        //"txtIngredient": [
+        //    "1 cup unsalted butter, softened",
+        //    "2 cups (370 grams) granulated sugar",
+        //    "4 large eggs",
+        //    "3 cups (300 grams) cake flour",
+        //    "1 tablespoon (12 grams) baking powder",
+        //    "1 cup milk",
+        //    "2 teaspoons vanilla extract"
+        //]
+        // A row for aIngredients will look like this array: [0, 0, 'Brocolli'], and will be created dynamically
+        var aIngredients = {
+            columns: [
+                { name: 'RecipeId', type: TYPES.Int },
+                { name: 'Ingredient', type: TYPES.NVarChar, length: 1000 }
+            ],
+            rows: [
+            ]
+        };
+
+        var ingredients = req.body.txtIngredient; // array of ingredients from /form-post
+        for (var i = 0; i < ingredients.length;i++)
+        {
+            aIngredients['rows'].push([0, ingredients[i]]);
+        }
+        console.log("HERE");
+        // populate aIngredients with the values from the form
+        // loop through the req.body searching for all ids that start with 'txtIngredient' and then a number.
+        // store all ingredients by req.body.txtIngredient#
+
+        // The IngredientTableType needs this:
+        //[StepNumber][int] NULL,
+        //[RecipeId][int] NOT NULL,
+        //[Title][nvarchar](50) NULL,
+        //[Text][nvarchar](4000) NULL,
+        //[VideoSnippetURL][nvarchar](1000) NULL,
+        //[AudioSnippetURL][nvarchar](1000) NULL,
+        //[ImageURL][nvarchar](1000) NULL,
+        //[Duration][time](7) NULL,
+        //[Tips][nvarchar](1000) NULL,
+        //[DependentOnStepNumber][int] NULL,
+        //[Timer][int] NULL
+        // We'll insert a 0 for both StepId and RecipeId bc the entry in the DB hasn't been created
+        // This is what a new recipe post step list might look like.
+        //"txtStep": [
+        //    "Preheat oven to 350°. Grease and flour 2 (9-inch) round cake pans. ",
+        //    "In a large bowl, beat butter and sugar with a mixer at medium speed until fluffy, 3 to 4 minutes. Add eggs, one at a time, beating well after each addition.",
+        //    "In a medium bowl, stir together dry ingredients. Gradually add flour mixture to butter mixture alternately with milk, beginning and ending with flour mixture, beating just until combined after each addition. Stir in vanilla.",
+        //    "Pour batter into prepared pans (smoothing tops if necessary). Bake until a wooden pick inserted in center comes out clean, 28 to 30 minutes. Let cool in pans for 10 minutes. Remove from pans, and let cool completely on wire racks."
+        //],
+        // URLs will look like this: USERID_RECIPEID_STEPNUMBER_RECIPETITLE.MEDIAFILEEXTENTION
+        // A row for aSteps will look like this: [0, 1, 0, '1-2-3-4 Cake', 'A delicious and very easy cake to bake', 
+        //                                        '1_'], and will be created dynamically
+        var aSteps = {
+            columns: [
+                { name: 'StepNumber', type: TYPES.Int },
+                { name: 'RecipeId', type: TYPES.Int },
+                { name: 'Title', type: TYPES.NVarChar, length: 50 },
+                { name: 'Text', type: TYPES.NVarChar, length: 4000 },
+                { name: 'VideoSnippetURL', type: TYPES.NVarChar, length: 1000 },
+                { name: 'AudioSnippetURL', type: TYPES.NVarChar, length: 1000 },
+                { name: 'ImageURL', type: TYPES.NVarChar, length: 1000 },
+                { name: 'Duration', type: TYPES.DateTime2, length: 7 },
+                { name: 'Tips', type: TYPES.NVarChar, length: 1000 },
+                { name: 'DependentOnStepNumber', type: TYPES.Int },
+                { name: 'Timer', type: TYPES.Int }
+            ],
+            rows: [
+            ]
+        };
+        // TODO not finished.
+        var steps = req.body.txtStep; // array of ingredients from /form-post
+        for (var i = 0; i < ingredients.length; i++)
+        {
+            aSteps['rows'].push([i+1, 0, '', steps[i], '', '', '', '', '', 1, 1]);
+        }
+
+        request.addParameter('RecipeTitle', TYPES.NVarChar, req.body.txtTitle);
+        request.addParameter('RecipeDescription', TYPES.NVarChar, req.body.txtDescription);
+        request.addParameter('RecipeCuisine', TYPES.NVarChar, 'unknown');
+        request.addParameter('RecipeTags', TYPES.NVarChar, req.body.txtTags);
+        request.addParameter('RecipeSource', TYPES.NVarChar, req.body.txtSource);
+        request.addParameter('RecipeAuthor', TYPES.NVarChar, req.body.txtAuthor);
+        // we'll let the stored proc set the date
+        //request.addParameter('RecipeDateAdded', TYPES.DateTime2, Date());
+        request.addParameter('RecipeCookTime', TYPES.NVarChar, req.body.txtCookTime);
+        request.addParameter('RecipePrepTime', TYPES.NVarChar, req.body.txtPrepTime);
+        request.addParameter('RecipeYield', TYPES.TinyInt, req.body.txtYield);
+        // TODO need to have this as a drop down on the front end and submits an ID for the LU table here.
+        request.addParameter('RecipeSkillLevel', TYPES.TinyInt, 1);
+        // TODO this value will be from a cookie bc the user will be logged in
+        request.addParameter('UserUserID', TYPES.Int, 1);
+        request.addParameter('RecipeYield', TYPES.TinyInt, req.body.txtYield);
+        request.addParameter('IngredientType', TYPES.TVP, aIngredients);
+        request.addParameter('StepType', TYPES.TVP, aSteps);
+
+        connection.callProcedure(request);
+    }
+});
+
 router.get('/recipe-post', function (req, res)
 {
 
@@ -178,7 +433,8 @@ router.get('/recipe-post', function (req, res)
         if (err)
         {
             console.log(err);
-            next(err);
+            // TODO, send a pretty error back to the user.
+            //next(err);
         } else
         {
             executeStatement();
@@ -202,11 +458,12 @@ router.get('/recipe-post', function (req, res)
                 // doesn't appear that config.options.parseJSON:true formats the way that is very usable.
                 // Am having msSQL create the JSON in the stored proc. and then gathering in
                 // and parsing it into usable JSON
-                // {name that the webpage will use to access the object : value from the Request call
+                // {name that the webpage will use to access the object : value from the Request call}
                 res.render("recipe-post", { aRecipe: JSON.parse(oneRecipe[0][0].value), title });
             }
             connection.close();
         });
+        // TODO remove hard coding of 1st recipe
         request.addParameter('RecipeId', TYPES.Int, 1);
 
         connection.callProcedure(request);
